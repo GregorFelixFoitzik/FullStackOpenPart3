@@ -11,4 +11,4 @@ Content-Type: application/json
 
 
 ### Delete a person
-DELETE http://localhost:3001/api/persons/787906
+DELETE http://localhost:3001/api/persons/88896
