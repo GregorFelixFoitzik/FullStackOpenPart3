@@ -1,8 +1,8 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
 app.use(express.json())
 app.use(express.static('dist'))
-
 
 const morgan = require('morgan')
 morgan.token('body', (req) => {
@@ -16,7 +16,7 @@ const cors = require('cors')
 app.use(cors())
 
 
-
+const Person = require('./models/person')
 
 
 let persons = [
@@ -79,18 +79,24 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
+    Person.find({}).then(persons => {
+        response.json(persons)  
+    })
 })
   
 app.get('/api/persons/:id', (request, response) => {
-    const id = request.params.id
-    const person = persons.find(person => person.id === id)
-
-    if (person) {
+    Person.findById(request.params.id).then(person => {
         response.json(person)
-    } else {
-        response.status(404).end()
-    }
+    })
+
+    // const id = request.params.id
+    // const person = persons.find(person => person.id === id)
+
+    // if (person) {
+    //     response.json(person)
+    // } else {
+    //     response.status(404).end()
+    // }
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -112,36 +118,49 @@ const generateId = () => {
 app.post('/api/persons', (request, response) => {
     const body = request.body
 
-    // request is not complete
-    if (!body.name || !body.number) {
-        const missingFields = [];
-        if (!body.name) missingFields.push('name');
-        if (!body.number) missingFields.push('number');
-    
-        return response.status(400).json({ 
-            error: `Content missing: ${missingFields.join(', ')}` 
-        });
+    if (body.content === undefined) {
+        return response.status(400).json({ error: 'content missing' })
     }
 
-    // request already exists
-    if (persons.find(person => person.name === body.name)) {
-        return response.status(400).json({ 
-            error: 'name must be unique' 
-        });
-    }
-
-    const person = {
+    const person = new Person({
         name: body.name,
         number: body.number,
-        id: generateId(),
-    }
+    })
+
+    person.save().then(savedPerson => {
+        response.json(savedPerson)
+    })
+
+    // // request is not complete
+    // if (!body.name || !body.number) {
+    //     const missingFields = [];
+    //     if (!body.name) missingFields.push('name');
+    //     if (!body.number) missingFields.push('number');
+    
+    //     return response.status(400).json({ 
+    //         error: `Content missing: ${missingFields.join(', ')}` 
+    //     });
+    // }
+
+    // // request already exists
+    // if (persons.find(person => person.name === body.name)) {
+    //     return response.status(400).json({ 
+    //         error: 'name must be unique' 
+    //     });
+    // }
+
+    // const person = {
+    //     name: body.name,
+    //     number: body.number,
+    //     id: generateId(),
+    // }
   
-    persons = persons.concat(person)
+    // persons = persons.concat(person)
   
-    response.json(person)
+    // response.json(person)
 })
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
     app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
