@@ -1,3 +1,4 @@
+### Simple GET request
 GET http://localhost:3001/api/persons
 
 ### Add a new person --> twice for Name must be unique
@@ -11,4 +12,22 @@ Content-Type: application/json
 
 
 ### Delete a person
-DELETE http://localhost:3001/api/persons/88896
+DELETE http://localhost:3001/api/persons/634847
+
+
+#################### RENDER ############################
+### Simple GET request
+GET https://fullstackopenpart3-4rxf.onrender.com/api/persons
+
+### Add a new person --> twice for Name must be unique
+POST https://fullstackopenpart3-4rxf.onrender.com/api/persons
+Content-Type: application/json
+
+{
+    "name": "Max Muster",
+    "number": "1234567890"
+}
+
+
+### Delete a person
+DELETE https://fullstackopenpart3-4rxf.onrender.com/api/persons/546895
