@@ -12,7 +12,7 @@ Content-Type: application/json
 
 
 ### Delete a person
-DELETE http://localhost:3001/api/persons/634847
+DELETE http://localhost:3001/api/persons/673648ac203b7d781304837b
 
 
 #################### RENDER ############################

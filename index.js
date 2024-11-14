@@ -88,23 +88,8 @@ app.get('/api/persons/:id', (request, response) => {
     Person.findById(request.params.id).then(person => {
         response.json(person)
     })
-
-    // const id = request.params.id
-    // const person = persons.find(person => person.id === id)
-
-    // if (person) {
-    //     response.json(person)
-    // } else {
-    //     response.status(404).end()
-    // }
 })
 
-app.delete('/api/persons/:id', (request, response) => {
-    const id = request.params.id
-    persons = persons.filter(person => person.id !== id)
-  
-    response.status(204).end()
-})
 
 const generateId = () => {
     // const maxId = persons.length > 0
@@ -118,8 +103,14 @@ const generateId = () => {
 app.post('/api/persons', (request, response) => {
     const body = request.body
 
-    if (body.content === undefined) {
-        return response.status(400).json({ error: 'content missing' })
+    if (!body.name || !body.number) {
+        const missingFields = [];
+        if (!body.name) missingFields.push('name');
+        if (!body.number) missingFields.push('number');
+    
+        return response.status(400).json({ 
+            error: `Content missing: ${missingFields.join(', ')}` 
+        })
     }
 
     const person = new Person({
@@ -130,35 +121,29 @@ app.post('/api/persons', (request, response) => {
     person.save().then(savedPerson => {
         response.json(savedPerson)
     })
-
-    // // request is not complete
-    // if (!body.name || !body.number) {
-    //     const missingFields = [];
-    //     if (!body.name) missingFields.push('name');
-    //     if (!body.number) missingFields.push('number');
-    
-    //     return response.status(400).json({ 
-    //         error: `Content missing: ${missingFields.join(', ')}` 
-    //     });
-    // }
-
-    // // request already exists
-    // if (persons.find(person => person.name === body.name)) {
-    //     return response.status(400).json({ 
-    //         error: 'name must be unique' 
-    //     });
-    // }
-
-    // const person = {
-    //     name: body.name,
-    //     number: body.number,
-    //     id: generateId(),
-    // }
-  
-    // persons = persons.concat(person)
-  
-    // response.json(person)
 })
+
+app.delete('/api/persons/:id', (request, response) => {
+    const id = request.params.id
+    Person.findByIdAndDelete(id)
+        .then(result => {
+            if (result) {
+                response.status(204).end()
+            } else {
+                response.status(404).json({ error: 'Person not found' })
+            }
+        })
+        .catch(error => {
+            console.error(error)
+            response.status(500).json({ error: 'Internal server error' })
+        })
+    
+    // const id = request.params.id
+    // persons = persons.filter(person => person.id !== id)
+  
+    // response.status(204).end()
+})
+
 
 const PORT = process.env.PORT
     app.listen(PORT, () => {
