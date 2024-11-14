@@ -1,6 +1,6 @@
 GET http://localhost:3001/api/persons
 
-### Add a new person
+### Add a new person --> twice for Name must be unique
 POST http://localhost:3001/api/persons
 Content-Type: application/json
 
@@ -11,4 +11,4 @@ Content-Type: application/json
 
 
 ### Delete a person
-DELETE http://localhost:3001/api/persons/5
+DELETE http://localhost:3001/api/persons/787906

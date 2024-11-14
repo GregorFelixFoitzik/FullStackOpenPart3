@@ -1,7 +1,13 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
+
+const customFormat = ':method :url :status :res[content-length] - :response-time ms'
+app.use(morgan(customFormat));
+
+
 
 let persons = [
     { 
@@ -89,13 +95,14 @@ const generateId = () => {
     // ? Math.max(...persons.map(n => Number(n.id)))
     // : 0
   
-    const randId = Math.random() * (100_000)
+    const randId = Math.round(Math.random() * 1_000_000)
     return String(randId + 1)
 }
   
 app.post('/api/persons', (request, response) => {
     const body = request.body
 
+    // request is not complete
     if (!body.name || !body.number) {
         const missingFields = [];
         if (!body.name) missingFields.push('name');
@@ -103,6 +110,13 @@ app.post('/api/persons', (request, response) => {
     
         return response.status(400).json({ 
             error: `Content missing: ${missingFields.join(', ')}` 
+        });
+    }
+
+    // request already exists
+    if (persons.find(person => person.name === body.name)) {
+        return response.status(400).json({ 
+            error: 'name must be unique' 
         });
     }
 
@@ -121,3 +135,6 @@ const PORT = 3001
     app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
+
+
+
