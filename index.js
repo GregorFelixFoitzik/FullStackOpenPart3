@@ -1,11 +1,14 @@
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
-
 app.use(express.json())
 
-const customFormat = ':method :url :status :res[content-length] - :response-time ms'
-app.use(morgan(customFormat));
+
+morgan.token('body', (req) => {
+    return req.method === 'POST' ? JSON.stringify(req.body) : ''
+})
+const logMessage = ':method :url :status :res[content-length] - :response-time ms :body'
+app.use(morgan(logMessage));
 
 
 
