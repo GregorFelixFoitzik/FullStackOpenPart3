@@ -32,6 +32,36 @@ app.get('/', (request, response) => {
     response.send('<h1>Hello World!</h1>')
 })
 
+app.get('/info', (request, response) => {        
+    const location = 'en-GB'
+    const day_options = {
+        timeZone: 'US/Pacific',
+        day: 'numeric',
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+    }
+    const time_options = {
+        timeZone: 'Europe/Helsinki',
+        timeZoneName: 'long',
+
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+    }
+    const date = new Date()
+    // const timezones = date.
+    const fDate = date.toLocaleDateString(location, day_options)
+    const fTime = date.toLocaleTimeString(location, time_options)
+
+    const info = `
+    <p>Phonebook has info for ${persons.length} people</p>
+    <p>${fDate} ${fTime}</p> 
+    `    
+    //${fTime}
+    response.send(info)
+})
+
 app.get('/api/persons', (request, response) => {
     response.json(persons)
 })
