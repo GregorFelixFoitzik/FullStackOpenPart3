@@ -1,0 +1,10 @@
+GET http://localhost:3001/api/persons
+
+### Test can be divided by this
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "Max Muster",
+    "number": "1234567890"
+}
