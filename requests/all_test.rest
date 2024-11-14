@@ -1,6 +1,6 @@
 GET http://localhost:3001/api/persons
 
-### Test can be divided by this
+### Add a new person
 POST http://localhost:3001/api/persons
 Content-Type: application/json
 
@@ -8,3 +8,7 @@ Content-Type: application/json
     "name": "Max Muster",
     "number": "1234567890"
 }
+
+
+### Delete a person
+DELETE http://localhost:3001/api/persons/5

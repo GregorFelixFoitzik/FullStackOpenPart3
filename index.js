@@ -85,19 +85,25 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 const generateId = () => {
-    const maxId = persons.length > 0
-      ? Math.max(...persons.map(n => Number(n.id)))
-      : 0
-    return String(maxId + 1)
+    // const maxId = persons.length > 0
+    // ? Math.max(...persons.map(n => Number(n.id)))
+    // : 0
+  
+    const randId = Math.random() * (100_000)
+    return String(randId + 1)
 }
   
 app.post('/api/persons', (request, response) => {
     const body = request.body
 
-    if (!body.content) {
+    if (!body.name || !body.number) {
+        const missingFields = [];
+        if (!body.name) missingFields.push('name');
+        if (!body.number) missingFields.push('number');
+    
         return response.status(400).json({ 
-        error: 'content missing' 
-        })
+            error: `Content missing: ${missingFields.join(', ')}` 
+        });
     }
 
     const person = {
