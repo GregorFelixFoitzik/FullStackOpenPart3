@@ -1,18 +1,85 @@
 ### Simple GET request
 GET http://localhost:3001/api/persons
 
-### Add a new person --> twice for Name must be unique
+### Add a new person (valid schema) --> twice for Name must be unique
 POST http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-    "name": "Max Muster",
-    "number": "1234567890"
+    "name": "Arnold Schwarzenegger",
+    "number": "09-1234556"
+}
+
+### Add a new person (valid schema) --> twice for Name must be unique
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "Peggy Gou",
+    "number": "040-22334455"
+}
+
+### Delete a person
+DELETE http://localhost:3001/api/persons/673718dd35ecaef8e5de52e7
+
+
+
+#################### SCHEMA VALIDATION ############################
+### -> name has to be at least 3 characters long
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "A",
+    "number": "09-1234556"
+}
+
+### -> number follows the pattern1 => fails
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "Arnold Schwarzenegger",
+    "number": "1234556"
+}
+
+### -> number follows the pattern2 => fails
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "Arnold Schwarzenegger",
+    "number": "1-22334455"
+}
+
+### -> number follows the pattern3 => fails
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "Arnold Schwarzenegger",
+    "number": "10-22-334455"
 }
 
 
-### Delete a person
-DELETE http://localhost:3001/api/persons/673648ac203b7d781304837b
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #################### RENDER ############################
