@@ -44,12 +44,18 @@ app.get('/info', (request, response) => {
   const fDate = date.toLocaleDateString(location, day_options)
   const fTime = date.toLocaleTimeString(location, time_options)
 
-  const info = `
-    <p>Phonebook has info for ${Person.length} people</p>
-    <p>${fDate} ${fTime}</p> 
-    `
-    //${fTime}
-  response.send(info)
+  Person.countDocuments({})
+    .then(count => {
+      const info = `
+        <p>Phonebook has info for ${count} people</p>
+        <p>${fDate} ${fTime}</p> 
+      `
+      response.send(info)
+    })
+    .catch(error => {
+      console.error(error)
+      response.status(500).json({ error: 'Internal server error' })
+    })
 })
 
 app.get('/api/persons', (request, response, next) => {
